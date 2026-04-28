@@ -22,7 +22,7 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -i ~/.ssh/key.pem ubuntu@13.201.11.244 << 'EOF'
+          ssh -F /dev/null -o IdentitiesOnly=yes -i ~/.ssh/key.pem -l ubuntu 13.201.11.244 << 'EOF'
             cd /home/ubuntu/my-webiste
             git pull origin main
             sudo cp index.html /var/www/html/index.html
