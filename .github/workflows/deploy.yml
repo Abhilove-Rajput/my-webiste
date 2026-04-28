@@ -10,21 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/key.pem
+          cat > ~/.ssh/key.pem << 'KEY'
+          ${{ secrets.EC2_KEY }}
+          KEY
           chmod 600 ~/.ssh/key.pem
           ssh-keyscan -H 13.201.11.244 >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
         run: |
-          ssh -F /dev/null -o IdentitiesOnly=yes -i ~/.ssh/key.pem -l ubuntu 13.201.11.244 << 'EOF'
-            cd /home/ubuntu/my-webiste
-            git pull origin main
-            sudo cp index.html /var/www/html/index.html
-            sudo systemctl restart nginx
-          EOF
+          ssh -F /dev/null -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ~/.ssh/key.pem ubuntu@13.201.11.244 "whoami"
