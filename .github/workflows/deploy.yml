@@ -1,0 +1,23 @@
+name: Auto Deploy Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 13.201.11.244
+          username: root
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd /home/ubuntu/my-webiste
+            git pull origin main
+            cp index.html /var/www/html/
+            systemctl restart nginx
