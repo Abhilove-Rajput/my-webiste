@@ -14,10 +14,10 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 13.201.11.244
-          username: root
+          username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
             cd /home/ubuntu/my-webiste
             git pull origin main
-            cp index.html /var/www/html/
-            systemctl restart nginx
+            sudo cp index.html /var/www/html/index.html
+            sudo systemctl restart nginx
